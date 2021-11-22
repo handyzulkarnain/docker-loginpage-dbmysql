@@ -1,0 +1,25 @@
+version: "3.8"
+
+volumes:
+  datafiles:
+
+services:
+  mysql:
+    image: mysql:8.0.0
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_TCP_PORT=3306
+    volumes:
+      - datafiles:/var/lib/mysql
+    restart: always
+  website:
+    container_name: login-site
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:80
+      - 8083:443
+    depends_on:
+      - mysql
